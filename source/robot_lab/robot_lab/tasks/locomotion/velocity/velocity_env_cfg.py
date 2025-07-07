@@ -260,10 +260,10 @@ class EventCfg:
         mode="startup",
         params={
             "asset_cfg": SceneEntityCfg("robot", body_names=".*"),
-            "static_friction_range": (0.1, 1.0),
-            "dynamic_friction_range": (0.1, 0.8),
-            "restitution_range": (0.0, 0.5),
-            "num_buckets": 32,
+            "static_friction_range": (0.3, 1.0),
+            "dynamic_friction_range": (0.3, 0.8),
+            "restitution_range": (0.0, 0.0),
+            "num_buckets": 64,
         },
     )
 
@@ -272,7 +272,7 @@ class EventCfg:
         mode="startup",
         params={
             "asset_cfg": SceneEntityCfg("robot", body_names=""),
-            "mass_distribution_params": (0.0, 3.0),
+            "mass_distribution_params": (-3.0, 3.0),
             "operation": "add",
         },
     )
@@ -288,11 +288,12 @@ class EventCfg:
     )
 
     randomize_com_positions = EventTerm(
-        func=mdp.randomize_rigid_body_com,
+        func=mdp.randomize_com_positions,
         mode="startup",
         params={
-            "asset_cfg": SceneEntityCfg("robot", body_names=".*"),
-            "com_range": {"x": (-0.05, 0.05), "y": (-0.05, 0.05), "z": (-0.05, 0.05)},
+            "asset_cfg": SceneEntityCfg("robot", body_names=""),
+            "com_distribution_params": (-0.1, 0.1),
+            "operation": "add",
         },
     )
 
@@ -313,7 +314,7 @@ class EventCfg:
         mode="reset",
         params={
             "position_range": (-0.2, 0.2),
-            "velocity_range": (-0.5, 0.5),
+            "velocity_range": (-2.5, 2.5),
         },
     )
 
@@ -470,28 +471,6 @@ class RewardsCfg:
         },
     )
 
-    action_mirror = RewTerm(
-        func=mdp.action_mirror,
-        weight=0.0,
-        params={
-            "asset_cfg": SceneEntityCfg("robot"),
-            "mirror_joints": [["FR.*", "RL.*"], ["FL.*", "RR.*"]],
-        },
-    )
-
-    action_sync = RewTerm(
-        func=mdp.action_sync,
-        weight=0.0,
-        params={
-            "asset_cfg": SceneEntityCfg("robot"),
-            "joint_groups": [
-                ["FR_hip_joint", "FL_hip_joint", "RL_hip_joint", "RR_hip_joint"],
-                ["FR_thigh_joint", "FL_thigh_joint", "RL_thigh_joint", "RR_thigh_joint"],
-                ["FR_calf_joint", "FL_calf_joint", "RL_calf_joint", "RR_calf_joint"],
-            ],
-        },
-    )
-
     # Action penalties
     applied_torque_limits = RewTerm(
         func=mdp.applied_torque_limits,
@@ -633,7 +612,13 @@ class RewardsCfg:
     #     },
     # )
 
-    upward = RewTerm(func=mdp.upward, weight=0.0)
+    upward = RewTerm(
+        func=mdp.upward,
+        weight=0.0,
+        params={
+            "std": math.sqrt(0.5),
+        },
+    )
 
 
 @configclass
@@ -662,13 +647,13 @@ class CurriculumCfg:
 
     terrain_levels = CurrTerm(func=mdp.terrain_levels_vel)
 
-    # command_levels = CurrTerm(
-    #     func=mdp.command_levels_vel,
-    #     params={
-    #         "reward_term_name": "track_lin_vel_xy_exp",
-    #         "max_curriculum": 1.5,
-    #     },
-    # )
+    command_levels = CurrTerm(
+        func=mdp.command_levels_vel,
+        params={
+            "reward_term_name": "track_lin_vel_xy_exp",
+            "max_curriculum": 1.5,
+        },
+    )
 
 
 ##

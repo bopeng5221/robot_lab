@@ -14,8 +14,6 @@
 
 > [!IMPORTANT]
 > This repository currently depends on **IsaacLab v2.0.0** or higher. If you prefer to use **IsaacLab v1.4.1**, please use it with **[v1.1](https://github.com/fan-ziqi/robot_lab/releases/tag/v1.1)** of this repository.
->
-> Since rsl_rl is updated too frequently, the new version is no longer compatible with AMP_for_hardware. Please use the historical version.
 
 > [!NOTE]
 > If you want to run policy in gazebo or real robot, please use [rl_sar](https://github.com/fan-ziqi/rl_sar) project.
@@ -202,6 +200,22 @@ python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Rough-Unitree
 python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Rough-Unitree-B2-v0
 ```
 
+DeepRobotics Lite3
+```bash
+# Train
+python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Flat-Deeprobotics-Lite3-v0 --headless
+# Play
+python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Rough-Deeprobotics-Lite3-v0
+```
+
+DeepRobotics X30
+```bash
+# Train
+python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Flat-Deeprobotics-X30-v0 --headless
+# Play
+python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Flat-Deeprobotics-X30-v0
+```
+
 Anymal D
 
 ```bash
@@ -230,6 +244,16 @@ python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Rough-Unitree
 # Play
 python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Rough-Unitree-B2W-v0
 ```
+
+DeepRobotics LYNX M20
+
+```bash
+# Train
+python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Flat-Deeprobotics-M20-v0 --headless
+# Play
+python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Flat-Deeprobotics-M20-v0
+```
+
 
 ### Humanoid
 
@@ -269,24 +293,22 @@ python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Rough-Unitree
 python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Rough-Unitree-G1-v0
 ```
 
-Booster T1
+### AMP for Quadruped
+
+The code for AMP training refers to [AMP_for_hardware](https://github.com/Alescontrela/AMP_for_hardware)
+
+Unitree A1
 
 ```bash
+# Retarget motion files
+python source/robot_lab/robot_lab/third_party/amp_utils/scripts/retarget_kp_motions.py
+# Replay AMP data
+python scripts/rsl_rl/amp/replay_amp_data.py --task RobotLab-Isaac-Velocity-Flat-Amp-Unitree-A1-v0
 # Train
-python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Rough-Booster-T1-v0 --headless
+python scripts/rsl_rl/amp/train.py --task RobotLab-Isaac-Velocity-Flat-Amp-Unitree-A1-v0 --headless
 # Play
-python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Rough-Booster-T1-v0
+python scripts/rsl_rl/amp/play.py --task RobotLab-Isaac-Velocity-Flat-Amp-Unitree-A1-v0
 ```
-
-RobotEra Xbot
-
-```bash
-# Train
-python scripts/rsl_rl/base/train.py --task RobotLab-Isaac-Velocity-Rough-RobotEra-Xbot-v0 --headless
-# Play
-python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Rough-RobotEra-Xbot-v0
-```
-
 
 ### HandStand
 
@@ -314,11 +336,8 @@ python scripts/rsl_rl/base/play.py --task RobotLab-Isaac-Velocity-Flat-HandStand
 For example, to generate Unitree A1 usd file:
 
 ```bash
-python scripts/tools/convert_urdf.py source/robot_lab/data/Robots/Unitree/A1/a1_description/urdf/a1.urdf source/robot_lab/data/Robots/Unitree/A1/a1.usd --merge-joints
+python scripts/tools/convert_urdf.py source/robot_lab/data/Robots/Unitree/A1/a1_description/urdf/a1.urdf source/robot_lab/data/Robots/Unitree/A1/a1.usd  --merge-join
 ```
-
-> [!NOTE]
-> There is a problem with the urdf conversion of the current Isaacsim version. Please checkout your IsaacLab to **v1.4.1** and use `scripts/tools/convert_urdf_v1.py` for conversion.
 
 Check [import_new_asset](https://docs.robotsfan.com/isaaclab/source/how-to/import_new_asset.html) for detail
 
@@ -430,3 +449,9 @@ Please cite the following if you use this code or parts of it:
   year = {2024}
 }
 ```
+
+## Acknowledgements
+
+The project uses some code from the following open-source code repositories:
+
+- [Alescontrela/AMP_for_hardware](https://github.com/Alescontrela/AMP_for_hardware)
